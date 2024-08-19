@@ -20,10 +20,9 @@ Each feature has 8 possible values, numbered 0 to 7. The training data distribut
 
 ![logistic regression generalization plot](symmetric_log_reg.png)
 
-Classifier predictions  $2 P(y=1|\mathbf{x})-1$ are presented for *test data*. Each heatmap corresponds to a different combination of encoding of the two features $x_1$ and $x_2$.  Heatmap (j) (one-hot encoding for both variables) is least biased, since the classifier avoids generalizing out-of-domain altogether: $P(y=1|\mathbf{x}) \simeq 0.5$, if $x_1 \neq x_2$. Heatmaps (a) (target encoding for both variables) presents an intuitive out-of-domain generalization (possibly acceptable, depending on the application domain):  $P(y=1|\mathbf{x})=0$, if $x_1 \leq 3 \&  x_2 \leq 3$, $P(y=1|\mathbf{x})=1$, if $x_1 > 3 \&  x_2 >3$, $P(y=1|\mathbf{x})=0.5$ otherwise. Case (h) results in arbitrary generalization, governed by a random ordering of variable values. The off-diagonal cases are revealing of the asymmetry introduced by encoding, which facilitates generalizing along one of the dimensions. In particular, the heatmaps of the last column (d), (j), and (i), clearly show that one-hot encoding facilitates generalization. Hence, if one variable uses one-hot encoding (here $x_2$) and the other uses another encoding, then generalization is driven by the one-hot encoded variable: $P(y=1|\mathbf{x})<0.5$, if $x_2 \leq 3$, $P(y=1|\mathbf{x})>0.5$, if $x_2 >3$. While one-hot encoding "dominates" all other encodings, it does not strongly dominate target encoding. Furthermore target encoding dominates target-ordinal and random-ordinal and target-ordinal dominates random-ordinal. So, while encoding with on-hot encoding may seem preferable (because least biased), target encoding presents a good alternative, if one-hot encoding is not viable because of problems of curse-of-dimensionality.
+Classifier predictions  $2 P(y=1|\mathbf{x})-1$ are presented for *test data*. Each heatmap corresponds to a different combination of encoding of the two features $x_1$ and $x_2$.  Heatmap (j) (one-hot encoding for both variables) is least biased, since the classifier avoids generalizing out-of-domain altogether: $P(y=1|\mathbf{x}) \simeq 0.5$, if $x_1 \neq x_2$. Heatmaps (a) (target encoding for both variables) presents an intuitive out-of-domain generalization (possibly acceptable, depending on the application domain):  $P(y=1|\mathbf{x})=0$, if $x_1 \leq 3,  x_2 \leq 3$, $P(y=1|\mathbf{x})=1$, if $x_1 > 3, x_2 >3$, $P(y=1|\mathbf{x})=0.5$ otherwise. Case (h) results in arbitrary generalization, governed by a random ordering of variable values. The off-diagonal cases are revealing of the asymmetry introduced by encoding, which facilitates generalizing along one of the dimensions. In particular, the heatmaps of the last column (d), (j), and (i), clearly show that one-hot encoding facilitates generalization. Hence, if one variable uses one-hot encoding (here $x_2$) and the other uses another encoding, then generalization is driven by the one-hot encoded variable: $P(y=1|\mathbf{x})<0.5$, if $x_2 \leq 3$, $P(y=1|\mathbf{x})>0.5$, if $x_2 >3$. While one-hot encoding "dominates" all other encodings, it does not strongly dominate target encoding. Furthermore target encoding dominates target-ordinal and random-ordinal and target-ordinal dominates random-ordinal. So, while encoding with on-hot encoding may seem preferable (because least biased), target encoding presents a good alternative, if one-hot encoding is not viable because of problems of curse-of-dimensionality.
 
 $R(e_1,e_2)$:
-
 |                         | TargetEncoder:x2 | TargetOrdinalEncoder:x2 | RandomOrdinalEncoder:x2 | OneHotEncoder:x2 |
 | :---------------------- | :--------------- | :---------------------- | :---------------------- | :--------------- |
 | TargetEncoder:x1        | -0.032181        | -1.76737                | -5.07958                | 0.362936         |
@@ -45,7 +44,7 @@ $R(e_1,e_2)$:
 | OneHotEncoder:x1        | -0.387975        | -0.792507               | -3.33748                | -0.0717689       |
 
 ### Neural Network, $\alpha = 0$
-![[nn_no_reg.png]]
+![neural network with no regularization](nn_no_reg.png)
 
 $R(e_1,e_2)$:
 
@@ -56,7 +55,7 @@ $R(e_1,e_2)$:
 | RandomOrdinalEncoder:x1 | 6.08493          | 1.04696                 | -0.844642               | 6.46482          |
 | OneHotEncoder:x1        | -1.67252         | -0.808272               | -5.67367                | -0.156863        |
 
-\
+
 
 ## Asymmetric
 
