@@ -1,24 +1,24 @@
 
-%% # Synthetic Data
+<!-- %% # Synthetic Data
 ## Encoded Spaces
 ## Random Ordinal
 ## Target Ordinal
-## Target Encoding
+## Target Encoding -->
 
 
- %%
+ <!-- %% -->
 
 ## Symmetric Case
 
 ### Dataset
 
-![[input_symmetric.png]]
+![diagonal dataset](input_symmetric.png)
 Shows the plot of $D(x) = ( P(y=1|x) - P(y=0|x) ) p(x) / p_{max}  =  (2 P(y=1|x) -1) p(x) / p_{max}$. This dataset has identical x1 and x2 features such that the $x_1 = x_2 = y$. A fair classifier should not chose either feature independently in predicting $y$.
 Each feature has 8 possible values, numbered 0 to 7. The training data distribution is concentrated on diagonal locations in input space: $y=0: \mathbf{x} \in \{(0,0),(1,1),(2,2),(3,3)\}$; $y=1: \mathbf{x} \in \{(4,4),(5,5),(6,6),(7,7)\}$. Hence, generalization outside of such input space locations are guided by encoding bias. The data generated for the following test has 1000 samples.
 
 ### Logistic Regression, Default Parameters
 
-![[symmetric_log_reg.png]]
+![logistic regression generalization plot](symmetric_log_reg.png)
 
 Classifier predictions  $2 P(y=1|\mathbf{x})-1$ are presented for *test data*. Each heatmap corresponds to a different combination of encoding of the two features $x_1$ and $x_2$.  Heatmap (j) (one-hot encoding for both variables) is least biased, since the classifier avoids generalizing out-of-domain altogether: $P(y=1|\mathbf{x}) \simeq 0.5$, if $x_1 \neq x_2$. Heatmaps (a) (target encoding for both variables) presents an intuitive out-of-domain generalization (possibly acceptable, depending on the application domain):  $P(y=1|\mathbf{x})=0$, if $x_1 \leq 3 \&  x_2 \leq 3$, $P(y=1|\mathbf{x})=1$, if $x_1 > 3 \&  x_2 >3$, $P(y=1|\mathbf{x})=0.5$ otherwise. Case (h) results in arbitrary generalization, governed by a random ordering of variable values. The off-diagonal cases are revealing of the asymmetry introduced by encoding, which facilitates generalizing along one of the dimensions. In particular, the heatmaps of the last column (d), (j), and (i), clearly show that one-hot encoding facilitates generalization. Hence, if one variable uses one-hot encoding (here $x_2$) and the other uses another encoding, then generalization is driven by the one-hot encoded variable: $P(y=1|\mathbf{x})<0.5$, if $x_2 \leq 3$, $P(y=1|\mathbf{x})>0.5$, if $x_2 >3$. While one-hot encoding "dominates" all other encodings, it does not strongly dominate target encoding. Furthermore target encoding dominates target-ordinal and random-ordinal and target-ordinal dominates random-ordinal. So, while encoding with on-hot encoding may seem preferable (because least biased), target encoding presents a good alternative, if one-hot encoding is not viable because of problems of curse-of-dimensionality.
 
@@ -33,7 +33,7 @@ $R(e_1,e_2)$:
 
 The quantitative results of $R(e_1,e_2)$ show align visually with which feature is "dominating" the other. We can see that when RandomOrdinalEncoding is used the other feature always dominates reflected by the negative values in the column for $x_2$ and the positive values in the row for $x_1$. We can also see that OneHot dominates all other encoding types reflected by its positive column for $x_2$ and negative row for $x_1$. We also notice that the diagonal is close to zero where the encoding type is not RandomOrdinalEncoding. A value of zero indicates no preference of variables. The non-zero value for $e_1,e_2 =$ RandomOrdinalEncoding results from the models inability to fit the training data resulting in a randomized preference. 
 ### Neural Network, $\alpha = 10$
-![[nn_high_reg.png]]
+![neural network with high regularization](nn_high_reg.png)
 
 $R(e_1,e_2)$:
 
@@ -61,11 +61,11 @@ $R(e_1,e_2)$:
 ## Asymmetric
 
 ### Dataset
-![[input_asymmetric.png]]
+![asymmetric dataset](input_asymmetric.png)
 10000 Samples
 
 ### Logistic Regression, High L1
-![[asymmetric_log_reg.png]]
+![logistic regression generalization plot on asymmetric dataset](asymmetric_log_reg.png)
 # Real Data
 
 ## Adult Income Dataset
