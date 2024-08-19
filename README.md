@@ -1,18 +1,12 @@
 
-<!-- %% # Synthetic Data
-## Encoded Spaces
-## Random Ordinal
-## Target Ordinal
-## Target Encoding -->
-
-
- <!-- %% -->
+# Synthetic Data
 
 ## Symmetric Case
 
 ### Dataset
 
 ![diagonal dataset](input_symmetric.png)
+
 Shows the plot of $D(x) = ( P(y=1|x) - P(y=0|x) ) p(x) / p_{max}  =  (2 P(y=1|x) -1) p(x) / p_{max}$. This dataset has identical x1 and x2 features such that the $x_1 = x_2 = y$. A fair classifier should not chose either feature independently in predicting $y$.
 Each feature has 8 possible values, numbered 0 to 7. The training data distribution is concentrated on diagonal locations in input space: $y=0: \mathbf{x} \in \{(0,0),(1,1),(2,2),(3,3)\}$; $y=1: \mathbf{x} \in \{(4,4),(5,5),(6,6),(7,7)\}$. Hence, generalization outside of such input space locations are guided by encoding bias. The data generated for the following test has 1000 samples.
 
@@ -30,9 +24,12 @@ $R(e_1,e_2)$:
 | RandomOrdinalEncoder:x1 | 6.02127          | 2.066                   | -0.561533               | 4.73425          |
 | OneHotEncoder:x1        | -0.427298        | -0.907887               | -4.04687                | -0.032181        |
 
-The quantitative results of $R(e_1,e_2)$ show align visually with which feature is "dominating" the other. We can see that when RandomOrdinalEncoding is used the other feature always dominates reflected by the negative values in the column for $x_2$ and the positive values in the row for $x_1$. We can also see that OneHot dominates all other encoding types reflected by its positive column for $x_2$ and negative row for $x_1$. We also notice that the diagonal is close to zero where the encoding type is not RandomOrdinalEncoding. A value of zero indicates no preference of variables. The non-zero value for $e_1,e_2 =$ RandomOrdinalEncoding results from the models inability to fit the training data resulting in a randomized preference. 
+The quantitative results of $R(e_1,e_2)$ show align visually with which feature is "dominating" the other. We can see that when RandomOrdinalEncoding is used, the other feature always dominates. Thi sis reflected by the negative values in the column for $x_2$ and the positive values in the row for $x_1$. We can also see that OneHot dominates all other encoding types reflected by its positive column for $x_2$ and negative row for $x_1$. We also notice that the diagonal is close to zero where the encoding type is not RandomOrdinalEncoding. A value of zero indicates no preference of variables. The non-zero value for $e_1,e_2 =$ RandomOrdinalEncoding results from the models inability to fit the training data resulting in a randomized preference. 
+
 ### Neural Network, $\alpha = 10$
 ![neural network with high regularization](nn_high_reg.png)
+
+Classifier predictions  $2 P(y=1|\mathbf{x})-1$ are presented for *test data*. Each heatmap corresponds to a different combination of encoding of the two features $x_1$ and $x_2$. Heatmap (j) is once again least biased where the model as the model does not prefer one variable over the other. The results show that generalizations utilizing random ordinal encoding are the most the biased, having a clear preference for the feature encoded using the alternate strategy. An artifact of ordinal encoding appears in (b) and (g). The nature of ordinal encoding is such that each successive level increases the input by 1. Thus for (b), horizontally there is a gradient where $x_2=0$ has the lowest $2 P(y=1|\mathbf{x})-1$ value for $x_1 > 4$ and the highest values for $x_2=7$ and $x_1 < 4$. Additionally for (g), vertically there is a gradient from -1 to -0.28 for $x_2=0$ and 0.93 to -0.35 for $x_2 = 0$. 
 
 $R(e_1,e_2)$:
 
@@ -42,6 +39,8 @@ $R(e_1,e_2)$:
 | TargetOrdinalEncoder:x1 | 1.08786          | 0.195335                | -0.484428               | 0.791486         |
 | RandomOrdinalEncoder:x1 | 4.92722          | 2.30064                 | 0.193524                | 2.84085          |
 | OneHotEncoder:x1        | -0.387975        | -0.792507               | -3.33748                | -0.0717689       |
+
+The quantitative results of $R(e_1,e_2)$ show align visually with which feature is "dominating" the other. We can see that when RandomOrdinalEncoding is used, the other feature always dominates. Thi sis reflected by the negative values in the column for $x_2$ and the positive values in the row for $x_1$. We can also see that OneHot dominates all other encoding types reflected by its positive column for $x_2$ and negative row for $x_1$. We also notice that the diagonal is close to zero where the encoding type is not RandomOrdinalEncoding. A value of zero indicates no preference of variables. The non-zero value for $e_1,e_2 =$ RandomOrdinalEncoding results from the models inability to fit the training data resulting in a randomized preference. 
 
 ### Neural Network, $\alpha = 0$
 ![neural network with no regularization](nn_no_reg.png)
@@ -91,6 +90,16 @@ Balanced Accuracy:
 | OrdinalEncoder:race       | 0.580292                | 0.5                            | 0.5                      | 0.580292                |
 | OneHotEncoder:race        | 0.584902                | 0.5                            | 0.5                      | 0.580441                |
 
+### Neural Net - Feature Sets
+
+|                | OneHotEncoder:f1 | TargetEncoder:f1 | OrdinalEncoder:f1 |
+|----------------|------------------|------------------|-------------------|
+| OneHotEncoder:f2 | 0.714410         | 0.739437         | 0.199159          |
+| TargetEncoder:f2 | 1.518820         | 1.101716         | 0.688299          |
+| OrdinalEncoder:f2 | 1.742374         | 1.233398         | 1.076349          |
+
+
+
 ## Cook County 
 
 ### Logistic Regression, Default
@@ -131,3 +140,9 @@ Balanced Accuracy:
 | TargetOrdinalEncoder:RACE | 4.647600                      | 3.303791                             | 9.321657                       | 5.020746                      |
 | OrdinalEncoder:RACE       | 3.735236                      | 2.547301                             | 7.212207                       | 3.195534                      |
 | OneHotEncoder:RACE        | 3.283287                      | 2.449550                             | 0.525701                       | 2.913817                      |
+
+<!--
+## Encoded Spaces
+## Random Ordinal
+## Target Ordinal
+## Target Encoding -->
