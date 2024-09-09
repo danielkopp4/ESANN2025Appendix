@@ -1,5 +1,7 @@
 
-# Metric Calculation
+# Definitions
+
+## Metric Calculation
 
 The method uses out-of-domain test samples uniformly sampled among input-groups. For domains including a relatively modest number of input-groups (e.g. 2 variables times 8 levels yield 64 input-groups), we use one representative of each input-group as out-of-domain test set.
 
@@ -14,6 +16,19 @@ The relationship between $y$ and $x_2$ is deterministic, but that between $x_1$ 
 
 
 In real data, the two variables are not identically dependent upon $y$. Hence $R(e_i, e_i)\neq 1$. The bias introduced by coding is revealed by the discrepancy between $R(e_i, e_i)$ and $R(e_i, e_j)$, $j\neq i$.
+
+## Encoding types
+All the following encoding types convert categorical data to numerical data. In the following definitions $x_i$ represents the feature to be encoded. $L_i$ represents the set of levels in $x_i$ and $l_{ij}$ represents a level within $L_i$
+
+**Ordinal Encoding**:Given an ordering of $L_i$, ordinal encoding will return the position of that $l_{ij}$ within the order. Ex: order = [red, orange, yellow], encode([red, yellow, yellow]) = [0, 2, 2]
+
+**Random Ordinal**: Ordinal encoding where the order is randomly assigned. This represents the case where there is a poor choice of the ordering.
+
+**Target Ordinal**: Ordinal encoding scheme where the order is determined by the correlation of each level with the target. 
+
+**Target Continuous**: Returns the mean of the target value $y$ such that each point has  $mean(y) : x_i = l_{ij}$. 
+
+**OneHot**: Returns a vector of length $|L_i|$ where the $j$ th value is 1 and all other values are 0. 
 
 
 # Synthetic Data
@@ -41,7 +56,7 @@ $R(e_1,e_2)$:
 | RandomOrdinal:x1 | 6.02127          | 2.066                   | -0.561533               | 4.73425          |
 | OneHot:x1        | -0.427298        | -0.907887               | -4.04687                | -0.032181        |
 
-The quantitative results of $R(e_1,e_2)$ align visually with which feature is "dominating" the other. We can see that when random-ordinal encoding is used, the other feature always dominates. This is reflected by the negative values in the column for $x_2$ and the positive values in the row for $x_1$. We can also see that one-hot encoding dominates all other encoding types reflected by its positive column for $x_2$ and negative row for $x_1$. We also notice that the diagonal is close to zero where the encoding type is not random-ordinal encoding. A value of zero indicates no preference of variables. The non-zero value for $e_1,e_2 =$ random-ordinal encoding results from the models inability to fit the training data resulting in a randomized preference. 
+We can see that when random-ordinal encoding is used, the other feature always dominates. This is reflected by the negative values in the column for $x_2$ and the positive values in the row for $x_1$. We can also see that one-hot encoding dominates all other encoding types reflected by its positive column for $x_2$ and negative row for $x_1$. We also notice that the diagonal is close to zero where the encoding type is not random-ordinal encoding. A value of zero indicates no preference of variables. The non-zero value for $e_1,e_2 =$ random-ordinal encoding results from the models inability to fit the training data resulting in a randomized preference. The quantitative results of $R(e_1,e_2)$ align with the previous figure. 
 
 ### Neural Network, $\alpha = 10$
 ![neural network with high regularization](nn_high_reg_processed.png)
@@ -49,7 +64,6 @@ The quantitative results of $R(e_1,e_2)$ align visually with which feature is "d
 Classifier predictions  $2 P(y=1|\mathbf{x})-1$ are presented for *test data*. Heatmap (j) is the least biased where the model as the model does not prefer one variable over the other. The results show that generalizations utilizing random-ordinal encoding are the most the biased, having a clear preference for the feature encoded using the alternate strategy. An artifact of ordinal encoding appears in cases (b) and (g). The nature of ordinal encoding is such that each successive level increases the input by 1. Thus for (b), horizontally there is a gradient where $x_2=0$ has the lowest $2 P(y=1|\mathbf{x})-1$ value for $x_1 > 4$ and the highest values for $x_2=7$ and $x_1 < 4$. Additionally for (g) and (f), vertically there is a gradient. For (g), the graident is most visible for $x_2=0$ and $x_2 = 7$. This effect is also seen in case (e), however, since both features are encoded ordinally the gradient is diagonal. In all of the off diagonal heatmaps there are preferences towards one feature. One-hot encoding dominates all of its off diagonal pairs target-ordinal encoding dominates all that are not one-hot encoding and target-ordinal encoding dominates random-ordinal.
 
 $R(e_1,e_2)$:
-
 |                         | TargetContinuous:x2 | TargetOrdinal:x2 | RandomOrdinal:x2 | OneHot:x2 |
 | :---------------------- | :--------------- | :---------------------- | :---------------------- | :--------------- |
 | TargetContinuous:x1        | 0.24091          | -0.779869               | -3.80423                | 0.44286          |
@@ -57,12 +71,14 @@ $R(e_1,e_2)$:
 | RandomOrdinal:x1 | 4.92722          | 2.30064                 | 0.193524                | 2.84085          |
 | OneHot:x1        | -0.387975        | -0.792507               | -3.33748                | -0.0717689       |
 
-The quantitative results of $R(e_1,e_2)$ show align visually with which feature is "dominating" the other. We can see that when RandomOrdinalEncoding is used, the other feature always dominates. Thi sis reflected by the negative values in the column for $x_2$ and the positive values in the row for $x_1$. We can also see that OneHot dominates all other encoding types reflected by its positive column for $x_2$ and negative row for $x_1$. We also notice that the diagonal is close to zero where the encoding type is not RandomOrdinalEncoding. A value of zero indicates no preference of variables. The non-zero value for $e_1,e_2 =$ RandomOrdinalEncoding results from the models inability to fit the training data resulting in a randomized preference. 
+For the off diagonal results, we can see that when random-ordinal encoding is used, the other feature always dominates. This is reflected once agin by the negative values in the column for $x_2$ and the positive values in the row for $x_1$. We can also see that one-hot encoding dominates all other encoding types reflected by its positive column for $x_2$ and negative row for $x_1$. We also notice that the diagonal is small but much larger than the previous quantitative results. This indicates that the neural network tends to make more random out-of-domain generalizations than does logistic regression.
 
 ### Neural Network, No regularization
 ![neural network with no regularization](nn_no_reg_processed.png)
 
-Here we once agin show the classifier predictions  $2 P(y=1|\mathbf{x})-1$ for *test data*. Heatmaps (d), (g), (i) 
+Here we once agin show the classifier predictions  $2 P(y=1|\mathbf{x})-1$ for *test data*. Heatmaps (d), (g), and (i) show
+a very strong preference for one-hot encoding reflected by the vertical split. Heatmaps (c), (f) show a preference away from random-ordinal encoding. We see in (h) that the neural network is able to fit the in-domain data on the diagonal but struggles in generalizing. (b) shows a preference of target-continuous compared to target ordinal as well as showing the gradient of ordinal encoding as previously discussed. We see random preferences in (a) and (j) indicating that the lack of regularization leads to increased out-of-domain generalizations. 
+
 
 $R(e_1,e_2)$:
 |                         | TargetContinuous:x2 | TargetOrdinal:x2 | RandomOrdinal:x2 | OneHot:x2 |
@@ -72,7 +88,7 @@ $R(e_1,e_2)$:
 | RandomOrdinal:x1 | 6.08493          | 1.04696                 | -0.844642               | 6.46482          |
 | OneHot:x1        | -1.67252         | -0.808272               | -5.67367                | -0.156863        |
 
-
+We see the same pattern as before with the column of random-ordinal encoding being negative for all off diagonal values column-wise and positive for all off diagonal values row-wise. This is inverted for one-hot where all off diagonal column-wise values are positive and off diagonal row values are negative. We see all diagonal values are quite large compared to the previous quantitative results, this indicates that lower regularization and higher complexity results in more arbitrary generalizations. 
 
 ## Asymmetric Features
 
@@ -81,12 +97,18 @@ $R(e_1,e_2)$:
 
 Data Generation Process: Draw $x_2 \in [0, 7]$, draw $x_1 = x_2  + \epsilon$, where $\epsilon$ is drawn according to a Normal distribution with standard deviation $\sigma=0.3$. Give value $y=0$ to points with value $x_2<4$ and $y=1$ otherwise. The causal graph is [ $x_1 = x_2  + \epsilon$] <- [$x_2$] ->    [$y=0$ if $x_2<4$; else $y=1$]. 10000 points are sampled to generate the dataset.
 
+The plot shows: $D(x) = ( P(y=1|x) - P(y=0|x) ) p(x) / p_{max}  =  (2 P(y=1|x) -1) p(x) / p_{max}$
+
 The relationship between $y$ and $x_2$ is deterministic, but that between $x_1$ and $x_2$ is noisy. $x_2$ is more predictive of $y$. Thus it seems natural that generalization according to $x_2$ would be privileged. 
 
-
-
 ### Logistic Regression, High L1
-![logistic regression generalization plot on asymmetric dataset](asymmetric_log_reg.png)
+![logistic regression generalization plot on asymmetric dataset](asymmetric_log_reg_processed.png)
+
+Here we trained a logistic regression model with high L1 regularization to try and isolate the more predictive feature. The expectation as previously stated is that $x_2$ is perfectly predictive whereas $x_1$ has a noisy relationship. Thus, we expect to see the model have a vertical line splitting $y$ based on solely $x_2$. 
+
+For (a), (e), (i), (j), we see this vertical split and to a lesser extent (h). However, for every other heatmap this does not appear to be the case. This indicates that we can change direction of generalization using only the features' encodings.
+
+
 # Real Data
 
 ## Adult Income Dataset
@@ -123,7 +145,7 @@ Balanced Accuracy:
 
 
 
-## Cook County 
+## Cook County Sentencing
 
 ### Logistic Regression, Default
 
