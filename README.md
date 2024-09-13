@@ -117,8 +117,7 @@ The Adult dataset, which contains features such as race and education, is used t
 ### Neural Network
 Hidden Layers: \[5,5\], $\alpha=1$
 
-$R(e_1,e_2)$:
-
+#### $R(e_1,e_2)$:
 |                           | TargetContinuous:education | TargetOrdinal:education | OrdinalEncoder:education | OneHot:education |
 | :------------------------ | :---------------------- | :----------------------------- | :----------------------- | :---------------------- |
 | TargetContinuous:race        | 1.80761                 | 0.378853                       | 0.288799                 | 1.69363                 |
@@ -126,7 +125,7 @@ $R(e_1,e_2)$:
 | OrdinalEncoder:race       | 1.74858                 | 0.575731                       | 0.448224                 | 1.68562                 |
 | OneHot:race        | 1.64214                 | 0.373556                       | 0.317833                 | 1.81385                 |
 
-Balanced Accuracy:
+#### Balanced Accuracy:
 
 |                           | TargetContinuous:education | TargetOrdinal:education | OrdinalEncoder:education | OneHot:education |
 | :------------------------ | :---------------------- | :----------------------------- | :----------------------- | :---------------------- |
@@ -135,7 +134,14 @@ Balanced Accuracy:
 | OrdinalEncoder:race       | 0.580292                | 0.5                            | 0.5                      | 0.580292                |
 | OneHot:race        | 0.584902                | 0.5                            | 0.5                      | 0.580441                |
 
+#### Analysis
+
+The $R$ values in the first grid give an idea of how much education dominates race. We would expect that the value of $R$ be very high as income is far more dependent on education than race. We see from the results that the $R$ values when education is encoded ordinally is significantly reduced compared to when its encoded using target continuous or one-hot encoding. We also notice that the balanced accuracy collapses to 50%. There is a clear effect of ordinal encoding making the input space harder to learn for the neural network.
+
 ### Neural Net - Feature Sets
+
+$f_1 =$ [race, gender, workclass]
+$f_2 =$ [marital-status, age, occupation]
 
 |                | OneHot:f1 | TargetContinuous:f1 | OrdinalEncoder:f1 |
 |----------------|------------------|------------------|-------------------|
@@ -143,21 +149,17 @@ Balanced Accuracy:
 | TargetContinuous:f2 | 1.518820         | 1.101716         | 0.688299          |
 | OrdinalEncoder:f2 | 1.742374         | 1.233398         | 1.076349          |
 
+#### Analysis 
 
+Here, we have an example where we have two sets of features rather than two features. The calculation of $R$ remain the same with the the permutation being applied to all features in $f_i$. Overall we can observe that all of the $R$ values are positive indicating that the features in $f_1$ are used more in predicting income than $f_2$. 
 
 ## Cook County Sentencing
 
+Here we look at the two input features commitment type and race in predicting the sentencing outcome. 
+
 ### Logistic Regression, Default
 
-$R(e_1,e_2)$:
-
-|                           | TargetContinuous:COMMITMENT_TYPE | TargetOrdinal:COMMITMENT_TYPE | OrdinalEncoder:COMMITMENT_TYPE | OneHot:COMMITMENT_TYPE |
-| :------------------------ | :---------------------------- | :----------------------------------- | :----------------------------- | :---------------------------- |
-| TargetContinuous:RACE        | 0.996685                      | 0.996612                             | 0.982144                       | 0.996685                      |
-| TargetOrdinal:RACE | 0.996685                      | 0.996612                             | 0.982144                       | 0.996685                      |
-| OrdinalEncoder:RACE       | 0.996685                      | 0.996612                             | 0.981992                       | 0.996685                      |
-| OneHot:RACE        | 0.996685                      | 0.996612                             | 0.982107                       | 0.996685                      |
-Balanced Accuracy:
+#### $R(e_1,e_2)$:
 
 |                           | TargetContinuous:COMMITMENT_TYPE | TargetOrdinal:COMMITMENT_TYPE | OrdinalEncoder:COMMITMENT_TYPE | OneHot:COMMITMENT_TYPE |
 | :------------------------ | :---------------------------- | :----------------------------------- | :----------------------------- | :---------------------------- |
@@ -166,18 +168,21 @@ Balanced Accuracy:
 | OrdinalEncoder:RACE       | 3.818604                      | 2.525171                             | 2.370728                       | 3.174911                      |
 | OneHot:RACE        | 3.055226                      | 1.509424                             | 1.274146                       | 2.819895                      |
 
-# Neural Network
-Hidden Layers: \[5,5\], Alpha=1
-
-$R(e_1,e_2)$:
+#### Balanced Accuracy:
 
 |                           | TargetContinuous:COMMITMENT_TYPE | TargetOrdinal:COMMITMENT_TYPE | OrdinalEncoder:COMMITMENT_TYPE | OneHot:COMMITMENT_TYPE |
 | :------------------------ | :---------------------------- | :----------------------------------- | :----------------------------- | :---------------------------- |
-| TargetContinuous:RACE        | 0.996685                      | 0.996612                             | 0.986852                       | 0.996876                      |
-| TargetOrdinal:RACE | 0.996685                      | 0.996731                             | 0.986852                       | 0.996952                      |
-| OrdinalEncoder:RACE       | 0.996685                      | 0.996764                             | 0.986852                       | 0.996647                      |
-| OneHot:RACE        | 0.996685                      | 0.996688                             | 0.986701                       | 0.996647                      |
-Balanced Accuracy:
+| TargetContinuous:RACE        | 0.996685                      | 0.996612                             | 0.982144                       | 0.996685                      |
+| TargetOrdinal:RACE | 0.996685                      | 0.996612                             | 0.982144                       | 0.996685                      |
+| OrdinalEncoder:RACE       | 0.996685                      | 0.996612                             | 0.981992                       | 0.996685                      |
+| OneHot:RACE        | 0.996685                      | 0.996612                             | 0.982107                       | 0.996685                      |
+
+
+# Neural Network
+Hidden Layers: \[5,5\], Alpha=1
+
+#### $R(e_1,e_2)$:
+
 
 |                           | TargetContinuous:COMMITMENT_TYPE | TargetOrdinal:COMMITMENT_TYPE | OrdinalEncoder:COMMITMENT_TYPE | OneHot:COMMITMENT_TYPE |
 | :------------------------ | :---------------------------- | :----------------------------------- | :----------------------------- | :---------------------------- |
@@ -185,6 +190,16 @@ Balanced Accuracy:
 | TargetOrdinal:RACE | 4.647600                      | 3.303791                             | 9.321657                       | 5.020746                      |
 | OrdinalEncoder:RACE       | 3.735236                      | 2.547301                             | 7.212207                       | 3.195534                      |
 | OneHot:RACE        | 3.283287                      | 2.449550                             | 0.525701                       | 2.913817                      |
+
+
+#### Balanced Accuracy:
+
+|                           | TargetContinuous:COMMITMENT_TYPE | TargetOrdinal:COMMITMENT_TYPE | OrdinalEncoder:COMMITMENT_TYPE | OneHot:COMMITMENT_TYPE |
+| :------------------------ | :---------------------------- | :----------------------------------- | :----------------------------- | :---------------------------- |
+| TargetContinuous:RACE        | 0.996685                      | 0.996612                             | 0.986852                       | 0.996876                      |
+| TargetOrdinal:RACE | 0.996685                      | 0.996731                             | 0.986852                       | 0.996952                      |
+| OrdinalEncoder:RACE       | 0.996685                      | 0.996764                             | 0.986852                       | 0.996647                      |
+| OneHot:RACE        | 0.996685                      | 0.996688                             | 0.986701                       | 0.996647                      |
 
 <!--
 ## Encoded Spaces
