@@ -125,7 +125,7 @@ Hidden Layers: \[5,5\], $\alpha=1$
 | OrdinalEncoder:race       | 1.74858                 | 0.575731                       | 0.448224                 | 1.68562                 |
 | OneHot:race        | 1.64214                 | 0.373556                       | 0.317833                 | 1.81385                 |
 
-#### Balanced Accuracy:
+#### Balanced Accuracy (in-domain test data):
 
 |                           | TargetContinuous:education | TargetOrdinal:education | OrdinalEncoder:education | OneHot:education |
 | :------------------------ | :---------------------- | :----------------------------- | :----------------------- | :---------------------- |
@@ -151,11 +151,11 @@ $f_2 =$ [marital-status, age, occupation]
 
 #### Analysis 
 
-Here, we have an example where we have two sets of features rather than two features. The calculation of $R$ remain the same with the the permutation being applied to all features in $f_i$. Overall we can observe that all of the $R$ values are positive indicating that the features in $f_1$ are used more in predicting income than $f_2$. 
+Here, we have an example where we have two sets of features rather than two features. The calculation of $R$ remain the same with the the permutation being applied to all features in $f_i$. Overall we can observe that all of the $R$ values are positive indicating that the features in $f_1$ are used more in predicting income than $f_2$. We also see further evidence that One-Hot encoding is the "easiest" for models to learn from and ordinal encoding is the hardest. We see that when $f_2$ is encoded using One-Hot encoding there are the lowest values out of any other row and therefore the most preference for $f_2$. Conversely, when $f_2$ is ordinally encoded we see the least preference for $f_2$. We see a similar case for the columns. Where $f_1$ uses One-Hot encoding there are the highest values compared to the other columns. Where $f_1$ is encoded ordinally, we see the lowest values or the least preference for $f_1$ features. We can also examine the smallest $R$ value and the largest $R$ value which are mirrored positions in the table. 1.74 (OneHot:$f_1$, OrdinalEncoder:$f_2$) is the highest value and the most preference for $f_1$, whereas, 0.12 (OrdinalEncoder:$f_1$, OneHot:f2) is the lowest value and the most preference for $f_2$. Based on this evidence it seems as if one-hot encoding "pulls" the generalization in its favor, whereas, ordinal encoding "pushes" the generalization away. 
 
 ## Cook County Sentencing
 
-Here we look at the two input features commitment type and race in predicting the sentencing outcome. 
+Here we look at the two input features commitment type and race in predicting the sentencing outcome using 266435 datapoints. Here sentencing type can be determined perfectly solely using commitment type. Sentencing decisions are grouped versions of commitment type. Therefore any usage of race in generalization is incorrect. 
 
 ### Logistic Regression, Default
 
@@ -168,7 +168,7 @@ Here we look at the two input features commitment type and race in predicting th
 | OrdinalEncoder:RACE       | 3.818604                      | 2.525171                             | 2.370728                       | 3.174911                      |
 | OneHot:RACE        | 3.055226                      | 1.509424                             | 1.274146                       | 2.819895                      |
 
-#### Balanced Accuracy:
+#### Balanced Accuracy (in-domain test data):
 
 |                           | TargetContinuous:COMMITMENT_TYPE | TargetOrdinal:COMMITMENT_TYPE | OrdinalEncoder:COMMITMENT_TYPE | OneHot:COMMITMENT_TYPE |
 | :------------------------ | :---------------------------- | :----------------------------------- | :----------------------------- | :---------------------------- |
@@ -177,6 +177,8 @@ Here we look at the two input features commitment type and race in predicting th
 | OrdinalEncoder:RACE       | 0.996685                      | 0.996612                             | 0.981992                       | 0.996685                      |
 | OneHot:RACE        | 0.996685                      | 0.996612                             | 0.982107                       | 0.996685                      |
 
+#### Analysis
+Here, we see similar patterns emerge to the previous tables. Commitment type is the only useful feature in predicting the sentencing outcome. This should mean we see large positive $R$ values. However, when commitment type is ordinally encoded the model uses this feature less during out of domain generalization than if it were encoded using One-Hot encoding or Target Encoding. This shows once again that encoding type affects the usage of the features under out of domain generalization. We see that when we use ordinal encoding (default sklearn `OrdinalEncoder`) we see that there is the lowest balanced accuracy. This make the observations above trivially obvious saying that it performs poorly in domain so it will perform badly out of domain as well. This becomes less trivial when we observe the case of commitment type using target ordinal encoding. In this case, there is an extremely small decrease in the balanced accuracy likely too small for any statistical difference (0.000073). In this case the model performs nearly equally as well in domain using target ordinal encoding as target encoding for commitment type. Additionally, there is no change to in domain performance when we vary the encoding type of race unless commitment type is encoded using the default ordinal encoding. Using the $R$ values from the table above shows us that the model can have exactly the same in domain performance while relying more or less on certain features in out of domain generalization.  
 
 # Neural Network
 Hidden Layers: \[5,5\], Alpha=1
@@ -191,8 +193,7 @@ Hidden Layers: \[5,5\], Alpha=1
 | OrdinalEncoder:RACE       | 3.735236                      | 2.547301                             | 7.212207                       | 3.195534                      |
 | OneHot:RACE        | 3.283287                      | 2.449550                             | 0.525701                       | 2.913817                      |
 
-
-#### Balanced Accuracy:
+#### Balanced Accuracy (in-domain test data):
 
 |                           | TargetContinuous:COMMITMENT_TYPE | TargetOrdinal:COMMITMENT_TYPE | OrdinalEncoder:COMMITMENT_TYPE | OneHot:COMMITMENT_TYPE |
 | :------------------------ | :---------------------------- | :----------------------------------- | :----------------------------- | :---------------------------- |
@@ -200,6 +201,9 @@ Hidden Layers: \[5,5\], Alpha=1
 | TargetOrdinal:RACE | 0.996685                      | 0.996731                             | 0.986852                       | 0.996952                      |
 | OrdinalEncoder:RACE       | 0.996685                      | 0.996764                             | 0.986852                       | 0.996647                      |
 | OneHot:RACE        | 0.996685                      | 0.996688                             | 0.986701                       | 0.996647                      |
+
+#### Analysis
+Here we see more drastic variations in the $R$ values compared to the last tables where the default encoding the commitment type has the highest $R$ values unless race is encoded using One-Hot encoding (where we have the lowest $R$ value of 0.53). For the balanced accuracy of commitment type using default ordinal encoding, the accuracies are similar regardless of how race is encoded and the resulting $R$ value. Additionally, this column once again has the lowest balanced accuracy scores of any other column where every other column has very similar accuracy scores. We notice again the pattern where the balanced accuracy of the commitment type being encoded using target encoded is very similar. However, this column has lower $R$ values than that of all other columns. Both show that in-domain performance metrics are not enough to tell us about how the model generalizes and if it is inducing bias for features that didn't otherwise exist. 
 
 <!--
 ## Encoded Spaces
