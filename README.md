@@ -1,4 +1,5 @@
 #Encoding Matters: Impact of Categorical Variable Encoding on Performance and Bias
+
 [Paper linked here](Baylearn2024pdf.pdf)
 
 
