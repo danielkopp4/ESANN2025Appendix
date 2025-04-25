@@ -1,6 +1,8 @@
 # Encoding Matters: Impact of Categorical Variable Encoding on Performance and Bias
 
-[Paper linked here](ESANN_2025.pdf)
+
+## Paper
+See [Paper linked here](ESANN_2025.pdf).
 
 
 
